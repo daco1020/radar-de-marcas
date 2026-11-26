@@ -15,6 +15,7 @@ import { Route as RegistroRouteImport } from './routes/registro'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedConfirmarRouteImport } from './routes/_authenticated/confirmar'
 import { Route as AuthenticatedInformeIdRouteImport } from './routes/_authenticated/informe/$id'
+import { Route as ApiPublicMotorRouteImport } from './routes/api/public/motor'
 import { Route as ApiPublicWorkerApiRouteImport } from './routes/api/public/worker-api'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -46,6 +47,11 @@ const AuthenticatedInformeIdRoute = AuthenticatedInformeIdRouteImport.update({
   path: '/informe/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiPublicMotorRoute = ApiPublicMotorRouteImport.update({
+  id: '/api/public/motor',
+  path: '/api/public/motor',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicWorkerApiRoute = ApiPublicWorkerApiRouteImport.update({
   id: '/api/public/worker-api',
   path: '/api/public/worker-api',
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/registro': typeof RegistroRoute
   '/confirmar': typeof AuthenticatedConfirmarRoute
   '/informe/$id': typeof AuthenticatedInformeIdRoute
+  '/api/public/motor': typeof ApiPublicMotorRoute
   '/api/public/worker-api': typeof ApiPublicWorkerApiRoute
 }
 export interface FileRoutesByTo {
@@ -66,6 +73,7 @@ export interface FileRoutesByTo {
   '/confirmar': typeof AuthenticatedConfirmarRoute
   '/': typeof AuthenticatedIndexRoute
   '/informe/$id': typeof AuthenticatedInformeIdRoute
+  '/api/public/motor': typeof ApiPublicMotorRoute
   '/api/public/worker-api': typeof ApiPublicWorkerApiRoute
 }
 export interface FileRoutesById {
@@ -76,6 +84,7 @@ export interface FileRoutesById {
   '/_authenticated/confirmar': typeof AuthenticatedConfirmarRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/informe/$id': typeof AuthenticatedInformeIdRoute
+  '/api/public/motor': typeof ApiPublicMotorRoute
   '/api/public/worker-api': typeof ApiPublicWorkerApiRoute
 }
 export interface FileRouteTypes {
@@ -86,6 +95,7 @@ export interface FileRouteTypes {
     | '/registro'
     | '/confirmar'
     | '/informe/$id'
+    | '/api/public/motor'
     | '/api/public/worker-api'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -94,6 +104,7 @@ export interface FileRouteTypes {
     | '/confirmar'
     | '/'
     | '/informe/$id'
+    | '/api/public/motor'
     | '/api/public/worker-api'
   id:
     | '__root__'
@@ -103,6 +114,7 @@ export interface FileRouteTypes {
     | '/_authenticated/confirmar'
     | '/_authenticated/'
     | '/_authenticated/informe/$id'
+    | '/api/public/motor'
     | '/api/public/worker-api'
   fileRoutesById: FileRoutesById
 }
@@ -110,6 +122,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   LoginRoute: typeof LoginRoute
   RegistroRoute: typeof RegistroRoute
+  ApiPublicMotorRoute: typeof ApiPublicMotorRoute
   ApiPublicWorkerApiRoute: typeof ApiPublicWorkerApiRoute
 }
 
@@ -157,6 +170,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedInformeIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/motor': {
+      id: '/api/public/motor'
+      path: '/api/public/motor'
+      fullPath: '/api/public/motor'
+      preLoaderRoute: typeof ApiPublicMotorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/worker-api': {
       id: '/api/public/worker-api'
       path: '/api/public/worker-api'
@@ -186,6 +206,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   LoginRoute: LoginRoute,
   RegistroRoute: RegistroRoute,
+  ApiPublicMotorRoute: ApiPublicMotorRoute,
   ApiPublicWorkerApiRoute: ApiPublicWorkerApiRoute,
 }
 export const routeTree = rootRouteImport

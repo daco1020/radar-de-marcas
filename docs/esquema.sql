@@ -93,3 +93,27 @@ create policy "archivos propios: leer" on storage.objects
     bucket_id = 'informes'
     and (storage.foldername(name))[1] = auth.uid()::text
   );
+
+-- ---------- motor en la nube (26 nov 2026) ----------
+-- Periodos por meses (de 1 a 3 meses de 2026) además del original 'oct-nov-2026'.
+alter table public.reports drop constraint if exists reports_period_check;
+alter table public.reports add constraint reports_period_check check (
+  period = 'oct-nov-2026'
+  or (period ~ '^2026-(0[1-9]|1[0-2])_2026-(0[1-9]|1[0-2])$'
+      and substr(period, 14, 2)::int >= substr(period, 6, 2)::int
+      and substr(period, 14, 2)::int - substr(period, 6, 2)::int <= 2)
+);
+alter table public.reports alter column period set default '2026-10_2026-11';
+
+-- Estado del motor por informe (solo el servidor).
+create table if not exists public.report_jobs (
+  report_id uuid primary key references public.reports(id) on delete cascade,
+  estado jsonb not null default '{}'::jsonb,
+  fase int not null default 0,
+  intentos int not null default 0,
+  lock_until timestamptz,
+  actualizado timestamptz not null default now()
+);
+alter table public.report_jobs enable row level security;
+
+-- Disparador: pg_cron llama cada 30 s a /api/public/motor con el secreto WORKER_SECRET (ver docs/DESARROLLO.md).

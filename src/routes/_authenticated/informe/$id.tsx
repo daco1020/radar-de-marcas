@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/StatusBadge";
-import { abrirArchivo } from "@/lib/archivos";
+import { abrirArchivo, abrirPdf } from "@/lib/archivos";
 import { PASOS } from "@/lib/pasos";
 import { nombrePeriodo } from "@/lib/periodo";
 import { cn } from "@/lib/utils";
@@ -162,7 +162,7 @@ function Informe() {
       {r.status === "done" && (
         <div className="space-y-3">
           <div className="flex flex-wrap gap-3">
-            <Button onClick={() => abrirArchivo(r.pdf_path)}>Descargar PDF</Button>
+            <Button onClick={() => abrirPdf(r.pdf_path, r.html_path)}>Descargar PDF</Button>
             <Button variant="outline" onClick={() => abrirArchivo(r.html_path)}>
               Ver en la web
             </Button>

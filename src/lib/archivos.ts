@@ -38,3 +38,30 @@ export async function abrirArchivo(path: string | null) {
   }
   go(data.signedUrl);
 }
+
+/**
+ * PDF de un informe hecho en la nube: abre la versión web en modo impresión y lanza el cuadro de
+ * imprimir del navegador (ahí se elige «Guardar como PDF»). Si el informe ya trae un PDF, lo abre.
+ */
+export async function abrirPdf(pdfPath: string | null, htmlPath: string | null) {
+  if (pdfPath) return abrirArchivo(pdfPath);
+  if (!htmlPath) {
+    toast.error("El informe todavía no está disponible.");
+    return;
+  }
+  const w = window.open("", "_blank");
+  const { data, error } = await supabase.storage.from("informes").download(htmlPath);
+  if (error || !data) {
+    w?.close();
+    toast.error("No se pudo abrir el informe.");
+    return;
+  }
+  const html = await data.text();
+  const extra =
+    '<script>window.__PRINT=1;window.addEventListener("load",function(){setTimeout(function(){window.print()},900)});</script>';
+  const url = URL.createObjectURL(new Blob([extra + html], { type: "text/html;charset=utf-8" }));
+  if (w) w.location.href = url;
+  else window.location.href = url;
+  setTimeout(() => URL.revokeObjectURL(url), 120_000);
+  toast.message("En el cuadro de imprimir, elige «Guardar como PDF».");
+}

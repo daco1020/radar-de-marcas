@@ -10,7 +10,7 @@ import { MonthRangePicker } from "@/components/MonthRangePicker";
 import { fecha, limpiarDominio, STATUS_LABEL } from "@/lib/format";
 import { nombreCorto, nombrePeriodo, periodoValido, ultimosMeses } from "@/lib/periodo";
 import { PASOS } from "@/lib/pasos";
-import { abrirArchivo } from "@/lib/archivos";
+import { abrirArchivo, abrirPdf } from "@/lib/archivos";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/")({
@@ -358,7 +358,7 @@ function Acciones({ r }: { r: Report }) {
   if (r.status === "done")
     return (
       <div className="flex justify-end gap-2">
-        <Button size="sm" variant="outline" onClick={() => abrirArchivo(r.pdf_path)}>
+        <Button size="sm" variant="outline" onClick={() => abrirPdf(r.pdf_path, r.html_path)}>
           PDF
         </Button>
         <Button size="sm" onClick={() => abrirArchivo(r.html_path)}>
