@@ -83,7 +83,6 @@ function Confirmar() {
         <Button onClick={generar} disabled={!sel || saving}>{saving ? "Creando…" : "Generar informe"}</Button>
         <Button variant="outline" onClick={() => navigate({ to: "/" })}>Cancelar</Button>
       </div>
-      <p className="text-xs text-muted-foreground">Buscar las cuentas cuesta unos COP 8.</p>
     </div>
   );
 }

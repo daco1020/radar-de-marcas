@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { StatusBadge } from "@/components/StatusBadge";
-import { cop, fecha, limpiarDominio } from "@/lib/format";
+import { fecha, limpiarDominio } from "@/lib/format";
 import { abrirArchivo } from "@/lib/archivos";
 
 export const Route = createFileRoute("/_authenticated/")({
@@ -70,19 +70,18 @@ function Panel() {
         <div className="overflow-x-auto rounded-xl border">
           <table className="w-full min-w-[720px] text-sm">
             <thead className="bg-card text-left">
-              <tr>{["Marca", "Periodo", "Estado", "Costo de datos", "Fecha", ""].map((h) => <th key={h} className="eyebrow px-4 py-3 font-medium">{h}</th>)}</tr>
+              <tr>{["Marca", "Periodo", "Estado", "Fecha", ""].map((h) => <th key={h} className="eyebrow px-4 py-3 font-medium">{h}</th>)}</tr>
             </thead>
             <tbody>
               {isLoading ? (
-                <tr><td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">Cargando…</td></tr>
+                <tr><td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">Cargando…</td></tr>
               ) : !reports?.length ? (
-                <tr><td colSpan={6} className="px-4 py-10 text-center text-muted-foreground">Todavía no hay informes. Crea el primero arriba.</td></tr>
+                <tr><td colSpan={5} className="px-4 py-10 text-center text-muted-foreground">Todavía no hay informes. Crea el primero arriba.</td></tr>
               ) : reports.map((r) => (
                 <tr key={r.id} className="border-t">
                   <td className="px-4 py-3"><div className="font-medium">{r.brand_name}</div><div className="text-xs text-muted-foreground">{r.domain}</div></td>
                   <td className="px-4 py-3">{PERIODOS[r.period] ?? r.period}</td>
                   <td className="px-4 py-3"><StatusBadge status={r.status} /></td>
-                  <td className="px-4 py-3 font-mono text-xs">{cop(r.cost_cop)}</td>
                   <td className="px-4 py-3 text-muted-foreground">{fecha(r.created_at)}</td>
                   <td className="px-4 py-3 text-right whitespace-nowrap">
                     {r.status === "done" ? (

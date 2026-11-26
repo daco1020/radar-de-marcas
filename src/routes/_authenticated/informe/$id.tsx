@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/StatusBadge";
-import { cop } from "@/lib/format";
 import { abrirArchivo } from "@/lib/archivos";
 import { cn } from "@/lib/utils";
 
@@ -84,7 +83,6 @@ function Informe() {
             <Button onClick={() => abrirArchivo(r.pdf_path)}>Descargar PDF</Button>
             <Button variant="outline" onClick={() => abrirArchivo(r.html_path)}>Ver en la web</Button>
           </div>
-          <p className="text-sm text-muted-foreground">Costo de datos: {cop(r.cost_cop)}</p>
         </div>
       )}
       {r.status === "error" && (
