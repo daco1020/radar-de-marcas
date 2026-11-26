@@ -32,3 +32,27 @@ vuelva a ejecutar. Para cambiar la base sin créditos, corre el SQL en Lovable �
 
 El worker (Python) vive fuera de este repo, en `REA Marketing/lovable/worker/`, junto al motor de informes.
 Se conecta a `<url publicada>/api/public/worker-api`.
+
+## Motor de informes (en la nube)
+
+Los informes se generan dentro de la app, sin ningún computador encendido:
+
+- `src/motor/` es el motor en TypeScript (copia del de Python en `informes/scripts/`):
+  `datos.ts` (descargas por pasos), `calculo.ts`, `narrativa.ts`, `imagenes.ts`, `informe.ts` y `motor.ts` (orquestador).
+- `src/routes/api/public/motor.ts` avanza **un informe por llamada** durante ~35 s y guarda dónde quedó
+  (tabla `report_jobs`; archivos intermedios en Storage, `informes/motor/<informe>/`).
+- El disparador es `pg_cron` en la base: el trabajo `motor-informes` llama a esa ruta cada 30 segundos con el
+  secreto `motor_secret` del Vault (el secreto no sale de la base; la app lo valida con `motor_secret_ok()`).
+- El PDF se genera en el navegador: el botón «PDF» abre el informe en modo impresión y el usuario elige
+  «Guardar como PDF». Los informes viejos hechos con Python conservan su PDF.
+- `src/motor/plantilla.ts` (CSS y JS del informe) se genera desde `informes/scripts/build_generic_es.py`;
+  no se edita a mano.
+- Para comparar con el motor de Python: `bun scripts/paridad.ts <carpeta del informe> <clave>`.
+  Para correr un informe completo en local con el CLI de treg: `bun scripts/motor_local.ts …`.
+
+Ver qué está haciendo el motor (SQL en la base):
+
+```sql
+select status_code, left(content, 200), created from net._http_response order by created desc limit 10;
+select r.brand_name, r.status, j.fase, j.intentos, j.actualizado from report_jobs j join reports r on r.id = j.report_id order by j.actualizado desc;
+```
