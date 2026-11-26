@@ -15,7 +15,7 @@ git commit -am "…" && git push   # Lovable lo toma en segundos
 
 - Trabaja siempre sobre `main`: es la rama que Lovable sincroniza.
 - No edites `src/routeTree.gen.ts` ni `src/integrations/supabase/types.ts` a mano: se generan solos.
-- `.env` solo trae la URL y la clave pública de Lovable Cloud. Los secretos (`TREG_TOKEN`, `WORKER_SECRET`)
+- `.env` solo trae la URL y la clave pública de Lovable Cloud. Los secretos (`TREG`, `WORKER_SECRET`)
   viven en Lovable → Cloud → Secrets y nunca van al repo.
 
 ## Base de datos
@@ -27,7 +27,7 @@ vuelva a ejecutar. Para cambiar la base sin créditos, corre el SQL en Lovable �
 
 | Archivo                               | Qué hace                                                                            | Secreto         |
 | ------------------------------------- | ----------------------------------------------------------------------------------- | --------------- |
-| `src/lib/cuentas.functions.ts`        | Busca las páginas de Meta de una marca (paso 2)                                     | `TREG_TOKEN`    |
+| `src/lib/cuentas.functions.ts`        | Busca las páginas de Meta de una marca (paso 2)                                     | `TREG`          |
 | `src/routes/api/public/worker-api.ts` | Puerta del worker externo: reclamar informe, avanzar pasos, URL para subir archivos | `WORKER_SECRET` |
 
 El worker (Python) vive fuera de este repo, en `REA Marketing/lovable/worker/`, junto al motor de informes.

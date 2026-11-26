@@ -19,8 +19,8 @@ export const buscarCuentas = createServerFn({ method: "POST" })
     const name = data.name;
     if (name.length < 2 || name.length > 80)
       return { candidates: [], error: "Escribe el nombre de la marca (2 a 80 caracteres)." };
-    const token = process.env["TREG_TOKEN"];
-    if (!token) return { candidates: [], error: "Falta configurar TREG_TOKEN en los secretos." };
+    const token = process.env["TREG"] ?? process.env["TREG_TOKEN"];
+    if (!token) return { candidates: [], error: "Falta configurar el secreto TREG." };
     const r = await fetch(`https://treg.to/call/${TREG_TOOL}?query=${encodeURIComponent(name)}`, {
       headers: { "X-Treg-Token": token, "X-Treg-Route-Max-Cost": "0.01" },
     });
