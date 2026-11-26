@@ -18,8 +18,8 @@ export const Route = createFileRoute("/api/public/worker-api")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const secret = process.env["WORKER_SECRET"] ?? "";
-        if (secret.length < 24 || !safeEqual(request.headers.get("x-worker-secret") ?? "", secret))
+        const secret = (process.env["WORKER_SECRET"] ?? "").trim();
+        if (secret.length < 24 || !safeEqual((request.headers.get("x-worker-secret") ?? "").trim(), secret))
           return json({ error: "No autorizado" }, 401);
         const { supabaseAdmin: db } = await import("@/integrations/supabase/client.server");
         let body: any;
