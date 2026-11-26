@@ -4,10 +4,10 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 export type Candidato = {
   page_id: string;
   name: string;
-  category: string;
+  category: string | null;
   ig_username: string | null;
-  ig_followers: number | null;
-  likes: number | null;
+  ig_followers: number;
+  likes: number;
 };
 
 const TREG_TOOL = "scrapecreators.x.v1-facebook-adlibrary-search-companies";
@@ -28,15 +28,16 @@ export const buscarCuentas = createServerFn({ method: "POST" })
     const body = (await r.json()) as any;
     const results = (body?.searchResults ?? body?.result?.searchResults ?? []) as any[];
     const candidates = results
-      .slice(0, 8)
       .map((p) => ({
-        page_id: String(p.page_id ?? p.id ?? ""),
+        page_id: String(p.page_id ?? ""),
         name: p.name ?? "",
-        category: p.category ?? "",
+        category: p.category ?? null,
         ig_username: p.ig_username ?? null,
-        ig_followers: p.ig_followers ?? null,
-        likes: p.likes ?? null,
+        ig_followers: Number(p.ig_followers ?? 0),
+        likes: Number(p.likes ?? 0),
       }))
-      .filter((c) => c.page_id);
+      .filter((c) => c.page_id)
+      .sort((a, b) => b.ig_followers - a.ig_followers)
+      .slice(0, 10);
     return { candidates };
   });
