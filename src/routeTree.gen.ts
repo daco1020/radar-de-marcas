@@ -9,50 +9,184 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as RegistroRouteImport } from './routes/registro'
+import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedConfirmarRouteImport } from './routes/_authenticated/confirmar'
+import { Route as AuthenticatedInformeIdRouteImport } from './routes/_authenticated/informe/$id'
+import { Route as ApiPublicWorkerApiRouteImport } from './routes/api/public/worker-api'
 
-const IndexRoute = IndexRouteImport.update({
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegistroRoute = RegistroRouteImport.update({
+  id: '/registro',
+  path: '/registro',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedConfirmarRoute = AuthenticatedConfirmarRouteImport.update({
+  id: '/confirmar',
+  path: '/confirmar',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedInformeIdRoute = AuthenticatedInformeIdRouteImport.update({
+  id: '/informe/$id',
+  path: '/informe/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const ApiPublicWorkerApiRoute = ApiPublicWorkerApiRouteImport.update({
+  id: '/api/public/worker-api',
+  path: '/api/public/worker-api',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/login': typeof LoginRoute
+  '/registro': typeof RegistroRoute
+  '/confirmar': typeof AuthenticatedConfirmarRoute
+  '/informe/$id': typeof AuthenticatedInformeIdRoute
+  '/api/public/worker-api': typeof ApiPublicWorkerApiRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/registro': typeof RegistroRoute
+  '/confirmar': typeof AuthenticatedConfirmarRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/informe/$id': typeof AuthenticatedInformeIdRoute
+  '/api/public/worker-api': typeof ApiPublicWorkerApiRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/login': typeof LoginRoute
+  '/registro': typeof RegistroRoute
+  '/_authenticated/confirmar': typeof AuthenticatedConfirmarRoute
+  '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/informe/$id': typeof AuthenticatedInformeIdRoute
+  '/api/public/worker-api': typeof ApiPublicWorkerApiRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/registro'
+    | '/confirmar'
+    | '/informe/$id'
+    | '/api/public/worker-api'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/login'
+    | '/registro'
+    | '/confirmar'
+    | '/'
+    | '/informe/$id'
+    | '/api/public/worker-api'
+  id:
+    | '__root__'
+    | '/_authenticated'
+    | '/login'
+    | '/registro'
+    | '/_authenticated/confirmar'
+    | '/_authenticated/'
+    | '/_authenticated/informe/$id'
+    | '/api/public/worker-api'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  RegistroRoute: typeof RegistroRoute
+  ApiPublicWorkerApiRoute: typeof ApiPublicWorkerApiRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/registro': {
+      id: '/registro'
+      path: '/registro'
+      fullPath: '/registro'
+      preLoaderRoute: typeof RegistroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/': {
+      id: '/_authenticated/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/confirmar': {
+      id: '/_authenticated/confirmar'
+      path: '/confirmar'
+      fullPath: '/confirmar'
+      preLoaderRoute: typeof AuthenticatedConfirmarRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/informe/$id': {
+      id: '/_authenticated/informe/$id'
+      path: '/informe/$id'
+      fullPath: '/informe/$id'
+      preLoaderRoute: typeof AuthenticatedInformeIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/api/public/worker-api': {
+      id: '/api/public/worker-api'
+      path: '/api/public/worker-api'
+      fullPath: '/api/public/worker-api'
+      preLoaderRoute: typeof ApiPublicWorkerApiRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedConfirmarRoute: typeof AuthenticatedConfirmarRoute
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedInformeIdRoute: typeof AuthenticatedInformeIdRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedConfirmarRoute: AuthenticatedConfirmarRoute,
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedInformeIdRoute: AuthenticatedInformeIdRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  LoginRoute: LoginRoute,
+  RegistroRoute: RegistroRoute,
+  ApiPublicWorkerApiRoute: ApiPublicWorkerApiRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

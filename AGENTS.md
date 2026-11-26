@@ -28,3 +28,6 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+- Server logic uses createServerFn / TanStack server routes, not Edge Functions: platform rule. Meta account search lives in src/lib/cuentas.functions.ts; the external worker calls /api/public/worker-api (guarded by WORKER_SECRET).
+- Protected pages live under src/routes/_authenticated (client-only guard); src/lib/auth-attach.ts sends the session token to server functions.
